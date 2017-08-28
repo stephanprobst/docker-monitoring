@@ -11,7 +11,6 @@ networks:
 services:
   prometheus:
     image: prom/prometheus
-    container_name: prometheus
     volumes:
       - ./prometheus/:/etc/prometheus/
       - prometheus_data:/prometheus
@@ -19,38 +18,34 @@ services:
       - '-config.file=/etc/prometheus/prometheus.yml'
       - '-storage.local.path=/prometheus'
       - '-alertmanager.url=http://alertmanager:9093'
-    expose:
-      - 9090
-    links:
-      - cadvisor:cadvisor
-      - alertmanager:alertmanager
+    labels:
+      ch.medgate.monitoring: "This label will appear on the service"
     depends_on:
       - cadvisor
+      - alertmanager
     networks:
       - back-tier
     deploy:
       placement:
         constraints:
           - node.hostname == dockertest01
-      labels:
-        ch.medgate.monitoring: "This label will appear on the service"
   node-exporter:
     container_name: node-exporter
     image: prom/node-exporter
+    labels:
+      ch.medgate.monitoring: "This label will appear on the service"
     volumes:
       - /proc:/host/proc:ro
       - /sys:/host/sys:ro
       - /:/rootfs:ro
     command: '-collector.procfs=/host/proc -collector.sysfs=/host/sys -collector.filesystem.ignored-mount-points="^(/rootfs|/host|)/(sys|proc|dev|host|etc)($$|/)" collector.filesystem.ignored-fs-types="^(sys|proc|auto|cgroup|devpts|ns|au|fuse\.lxc|mqueue)(fs|)$$"'
-    expose:
-      - 9100
     networks:
       - back-tier
     deploy:
-      labels:
-        ch.medgate.monitoring: "This label will appear on the service"
   alertmanager:
     image: prom/alertmanager
+    labels:
+      ch.medgate.monitoring: "This label will appear on the service"
     volumes:
       - ./alertmanager/:/etc/alertmanager/
     networks:
@@ -62,10 +57,10 @@ services:
       placement:
         constraints:
           - node.hostname == dockertest01
-      labels:
-        ch.medgate.monitoring: "This label will appear on the service"
   cadvisor:
     image: google/cadvisor
+    labels:
+      ch.medgate.monitoring: "This label will appear on the service"
     volumes:
       - /:/rootfs:ro
       - /var/run:/var/run:rw
@@ -77,11 +72,11 @@ services:
       - back-tier
     deploy:
       mode: global
-      labels:
-        ch.medgate.monitoring: "This label will appear on the service"
 
   grafana:
     image: grafana/grafana
+    labels:
+      ch.medgate.monitoring: "This label will appear on the service"
     depends_on:
       - prometheus
     ports:
@@ -90,9 +85,6 @@ services:
       - grafana_data:/var/lib/grafana
     env_file:
       - config.monitoring
-    deploy:
-      labels:
-        ch.medgate.monitoring: "This label will appear on the service"
     networks:
       - back-tier
       - front-tier
