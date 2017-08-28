@@ -32,6 +32,8 @@ services:
       placement:
         constraints:
           - node.hostname == dockertest01
+      labels:
+        ch.medgate.monitoring: "This label will appear on the service"
   node-exporter:
     container_name: node-exporter
     image: prom/node-exporter
@@ -45,6 +47,8 @@ services:
     networks:
       - back-tier
     deploy:
+      labels:
+        ch.medgate.monitoring: "This label will appear on the service"
   alertmanager:
     image: prom/alertmanager
     volumes:
@@ -58,6 +62,8 @@ services:
       placement:
         constraints:
           - node.hostname == dockertest01
+      labels:
+        ch.medgate.monitoring: "This label will appear on the service"
   cadvisor:
     image: google/cadvisor
     volumes:
@@ -71,6 +77,8 @@ services:
       - back-tier
     deploy:
       mode: global
+      labels:
+        ch.medgate.monitoring: "This label will appear on the service"
 
   grafana:
     image: grafana/grafana
@@ -82,6 +90,9 @@ services:
       - grafana_data:/var/lib/grafana
     env_file:
       - config.monitoring
+    deploy:
+      labels:
+        ch.medgate.monitoring: "This label will appear on the service"
     networks:
       - back-tier
       - front-tier
