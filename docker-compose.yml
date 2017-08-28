@@ -19,7 +19,7 @@ services:
       - '-storage.local.path=/prometheus'
       - '-alertmanager.url=http://alertmanager:9093'
     labels:
-      ch.medgate.monitoring: "This label will appear on the service"
+      ch.medgate.monitoring: "true"
     depends_on:
       - cadvisor
       - alertmanager
@@ -32,7 +32,7 @@ services:
   node-exporter:
     image: prom/node-exporter
     labels:
-      ch.medgate.monitoring: "This label will appear on the service"
+      ch.medgate.monitoring: "true"
     volumes:
       - /proc:/host/proc:ro
       - /sys:/host/sys:ro
@@ -44,7 +44,7 @@ services:
   alertmanager:
     image: prom/alertmanager
     labels:
-      ch.medgate.monitoring: "This label will appear on the service"
+      ch.medgate.monitoring: "true"
     volumes:
       - ./alertmanager/:/etc/alertmanager/
     networks:
@@ -59,7 +59,7 @@ services:
   cadvisor:
     image: google/cadvisor
     labels:
-      ch.medgate.monitoring: "This label will appear on the service"
+      ch.medgate.monitoring: "true"
     volumes:
       - /:/rootfs:ro
       - /var/run:/var/run:rw
@@ -73,7 +73,7 @@ services:
   grafana:
     image: grafana/grafana
     labels:
-      ch.medgate.monitoring: "This label will appear on the service"
+      ch.medgate.monitoring: "true"
     depends_on:
       - prometheus
     ports:
