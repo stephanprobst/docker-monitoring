@@ -25,10 +25,12 @@ services:
       - alertmanager
     networks:
       - back-tier
+    environment: 
+      - MONITORING_HOST_NAME
     deploy:
       placement:
         constraints:
-          - node.hostname == dockertest01
+          - node.hostname == ${MONITORING_HOST_NAME}
   node-exporter:
     image: prom/node-exporter
     labels:
@@ -52,10 +54,12 @@ services:
     command:
       - '-config.file=/etc/alertmanager/config.yml'
       - '-storage.path=/alertmanager'
+    environment: 
+      - MONITORING_HOST_NAME
     deploy:
       placement:
         constraints:
-          - node.hostname == dockertest01
+          - node.hostname == ${MONITORING_HOST_NAME}
   cadvisor:
     image: google/cadvisor
     labels:
